@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ImageCard from './ImageCard';
 import BatchMenu from './BatchMenu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
@@ -30,7 +30,26 @@ interface ImageBatchProps {
 
 export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
   const [copied, setCopied] = useState(false);
+  const [isPromptTruncated, setIsPromptTruncated] = useState(false);
+  const promptRef = useRef<HTMLParagraphElement>(null);
   const modelName = modelNames[batch.model] || batch.model;
+
+  useEffect(() => {
+    const checkTruncation = () => {
+      if (promptRef.current) {
+        setIsPromptTruncated(
+          promptRef.current.scrollWidth > promptRef.current.clientWidth
+        );
+      }
+    };
+
+    checkTruncation();
+    window.addEventListener('resize', checkTruncation);
+
+    return () => {
+      window.removeEventListener('resize', checkTruncation);
+    };
+  }, [batch.prompt]);
 
   const handleDelete = () => {
     onDelete(batch.id);
@@ -50,11 +69,13 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <p className="text-[#141414] dark:text-white text-sm font-medium pb-1 truncate cursor-default">{batch.prompt}</p>
+                <p ref={promptRef} className="text-[#141414] dark:text-white text-sm font-medium pb-1 truncate cursor-default">{batch.prompt}</p>
               </TooltipTrigger>
-              <TooltipContent side="bottom" align="center" className="max-w-md">
-                <p className="text-sm">{batch.prompt}</p>
-              </TooltipContent>
+              {isPromptTruncated && (
+                <TooltipContent side="bottom" align="center" className="max-w-md">
+                  <p className="text-sm">{batch.prompt}</p>
+                </TooltipContent>
+              )}
             </Tooltip>
           </TooltipProvider>
           <Button
