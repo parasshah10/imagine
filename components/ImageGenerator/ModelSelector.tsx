@@ -14,10 +14,10 @@ export default function ModelSelector() {
       <label className="flex flex-col min-w-40 flex-1">
         <p className="text-[#141414] text-base font-medium leading-normal pb-2">Model</p>
         <Select>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full bg-[#ededed] border-none rounded-2xl h-14 px-4">
             <SelectValue placeholder="Choose model" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-[#ededed] rounded-2xl">
             <SelectItem value="one">Model One</SelectItem>
             <SelectItem value="two">Model Two</SelectItem>
             <SelectItem value="three">Model Three</SelectItem>

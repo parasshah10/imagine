@@ -14,10 +14,10 @@ export default function AspectRatioSelector() {
       <label className="flex flex-col min-w-40 flex-1">
         <p className="text-[#141414] text-base font-medium leading-normal pb-2">Aspect Ratio</p>
         <Select>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full bg-[#ededed] border-none rounded-2xl h-14 px-4">
             <SelectValue placeholder="Choose aspect ratio" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-[#ededed] rounded-2xl">
             <SelectItem value="1:1">1:1 Square</SelectItem>
             <SelectItem value="4:3">4:3 Standard</SelectItem>
             <SelectItem value="16:9">16:9 Widescreen</SelectItem>
