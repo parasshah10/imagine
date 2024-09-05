@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 
 export default function GeneratorForm() {
   return (
-    <div className="layout-content-container flex flex-col w-80">
+    <div className="layout-content-container flex flex-col w-full md:w-80">
       <h2 className="text-[#141414] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Create</h2>
       <ModelSelector />
       <PromptInput />
