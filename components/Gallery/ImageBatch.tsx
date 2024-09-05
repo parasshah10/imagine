@@ -91,7 +91,7 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
 
   return (
     <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col">
         <div className="flex items-center justify-between">
           <TooltipProvider delayDuration={0}>
             <Tooltip>
@@ -117,7 +117,7 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
             <BatchMenu onDelete={handleDelete} onRemix={handleRemix} />
           </div>
         </div>
-        <p className="text-[#141414] dark:text-white text-[10px]">
+        <p className="text-[#141414] dark:text-white text-[10px] mt-0">
           {modelName} | {batch.width}x{batch.height} • {formatTimestamp(batch.createdAt)}
         </p>
       </div>
