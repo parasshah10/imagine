@@ -9,8 +9,8 @@ export default function ImageCountSlider() {
   return (
     <div className="flex flex-col px-4 py-3">
       <div className="flex justify-between items-center mb-2">
-        <p className="text-[#141414] text-base font-medium leading-normal">Image Count</p>
-        <p className="text-[#141414] text-sm font-normal leading-normal">{imageCount}</p>
+        <p className="text-[#141414] dark:text-white text-base font-medium leading-normal">Image Count</p>
+        <p className="text-[#141414] dark:text-white text-sm font-normal leading-normal">{imageCount}</p>
       </div>
       <Slider
         min={1}
