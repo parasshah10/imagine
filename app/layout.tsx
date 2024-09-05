@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'],
  })
 
 export const metadata = {
-  title: 'ImageGen - AI Image Generation',
+  title: 'Imagine - AI Image Generation',
   description: 'Generate amazing images using AI',
 }
 
