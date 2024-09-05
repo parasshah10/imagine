@@ -88,7 +88,7 @@ export default function GeneratorForm({ onGenerate, remixBatch }: { onGenerate: 
   return (
     <div className="layout-content-container flex flex-col w-full md:w-80">
       <div className="flex justify-between items-center mb-4 px-4">
-        <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]">Imagine</h2>
+        <h2 className="text-lg font-bold leading-tight tracking-[-0.015em] text-[#141414] dark:text-white">Imagine</h2>
         <ThemeToggle />
       </div>
       <ModelSelector value={model} onChange={setModel} />
