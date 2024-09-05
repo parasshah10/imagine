@@ -1,4 +1,5 @@
 import ImageCard from './ImageCard';
+import BatchMenu from './BatchMenu';
 
 interface Image {
   url: string;
@@ -23,8 +24,13 @@ export default function ImageBatch({ batch }: { batch: Batch }) {
 
   return (
     <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
-      <p className="text-[#141414] dark:text-white text-sm font-medium pb-1">{batch.prompt}</p>
-      <p className="text-[#141414] dark:text-white text-xs font-medium pb-2">Model: {modelName} | Resolution: {batch.width}x{batch.height}</p>
+      <div className="flex justify-between items-start mb-2">
+        <div>
+          <p className="text-[#141414] dark:text-white text-sm font-medium pb-1">{batch.prompt}</p>
+          <p className="text-[#141414] dark:text-white text-xs font-medium">Model: {modelName} | Resolution: {batch.width}x{batch.height}</p>
+        </div>
+        <BatchMenu />
+      </div>
       <div className="flex overflow-x-auto">
         <div className="flex gap-2">
           {batch.images.map((image, index) => (
