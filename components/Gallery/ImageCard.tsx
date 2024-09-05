@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Fancybox from "@fancyapps/ui/src/Fancybox/Fancybox";
+import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 interface Image {
