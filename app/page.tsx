@@ -1,5 +1,5 @@
-import GeneratorForm from './components/ImageGenerator/GeneratorForm';
-import ImageGrid from './components/Gallery/ImageGrid';
+import GeneratorForm from '../components/ImageGenerator/GeneratorForm';
+import ImageGrid from '../components/Gallery/ImageGrid';
 
 // Sample image data
 const sampleImages = [
