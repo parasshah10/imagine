@@ -4,8 +4,6 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { prompt, width, height, model, number_results } = body;
 
-  console.log('Received request:', body);  // Debug: Log the received request
-
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate-image`, {
       method: 'POST',
@@ -16,13 +14,10 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error response:', response.status, errorText);  // Debug: Log the error response
-      throw new Error(`Failed to generate image: ${response.status} ${errorText}`);
+      throw new Error('Failed to generate image');
     }
 
     const data = await response.json();
-    console.log('Received data:', data);  // Debug: Log the received data
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error generating image:', error);
