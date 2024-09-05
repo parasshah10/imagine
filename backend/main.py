@@ -113,13 +113,7 @@ async def get_batches():
         batches = []
         for row in rows:
             created_at = row[6]
-            print(f"Raw created_at from database: {created_at}")  # Debug log
-            if created_at:
-                created_at_iso = created_at.isoformat()
-                print(f"ISO formatted created_at: {created_at_iso}")  # Debug log
-            else:
-                created_at_iso = None
-                print("created_at is None")  # Debug log
+            created_at_iso = created_at.isoformat() if created_at else None
             
             batch = {
                 "id": row[0],
@@ -132,7 +126,6 @@ async def get_batches():
             }
             batches.append(batch)
         
-        print(f"Batches to be returned: {batches}")  # Debug log
         return {"batches": batches}
     except (Exception, psycopg2.DatabaseError) as error:
         raise HTTPException(status_code=500, detail=str(error))

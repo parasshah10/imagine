@@ -6,33 +6,24 @@ import { Copy, Check } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const formatTimestamp = (timestamp: string) => {
-  console.log('Raw timestamp:', timestamp); // Debug log
   if (!timestamp) return 'N/A';
   
-  // Parse the ISO 8601 string
   const date = new Date(timestamp);
-  console.log('Parsed date:', date); // Debug log
   if (isNaN(date.getTime())) return 'Invalid Date';
 
-  // Convert to local time
-  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-  console.log('Local date:', localDate); // Debug log
-
   const now = new Date();
-  const hours = localDate.getHours().toString().padStart(2, '0');
-  const minutes = localDate.getMinutes().toString().padStart(2, '0');
-  const day = localDate.getDate().toString().padStart(2, '0');
-  const month = (localDate.getMonth() + 1).toString().padStart(2, '0');
-  const year = localDate.getFullYear();
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
 
   const timeString = `${hours}:${minutes}`;
-  const dateString = localDate.getFullYear() === now.getFullYear() 
+  const dateString = date.getFullYear() === now.getFullYear() 
     ? `${day}-${month}`
     : `${day}-${month}-${year}`;
 
-  const formattedTimestamp = `${timeString} ${dateString}`;
-  console.log('Formatted timestamp:', formattedTimestamp); // Debug log
-  return formattedTimestamp;
+  return `${timeString} ${dateString}`;
 };
 
 interface Image {
