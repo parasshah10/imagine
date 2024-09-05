@@ -20,6 +20,7 @@ interface Batch {
 export default function Home() {
   const [generatedBatch, setGeneratedBatch] = useState<Batch | null>(null);
   const [previousBatches, setPreviousBatches] = useState<Batch[]>([]);
+  const [remixBatch, setRemixBatch] = useState<Batch | null>(null);
 
   useEffect(() => {
     fetchPreviousBatches();
@@ -60,16 +61,20 @@ export default function Home() {
     }
   };
 
+  const handleRemix = (batch: Batch) => {
+    setRemixBatch(batch);
+  };
+
   return (
     <div className="flex flex-col md:flex-row flex-1 justify-start py-5">
       <div className="w-full md:w-80 px-4 md:px-6 mb-6 md:mb-0">
-        <GeneratorForm onGenerate={handleGenerate} />
+        <GeneratorForm onGenerate={handleGenerate} remixBatch={remixBatch} />
       </div>
       <div className="flex-1 px-4 md:px-6 overflow-x-auto">
         <div className="layout-content-container flex flex-col w-full">
-          {generatedBatch && <ImageBatch batch={generatedBatch} onDelete={handleDelete} />}
+          {generatedBatch && <ImageBatch batch={generatedBatch} onDelete={handleDelete} onRemix={handleRemix} />}
           {previousBatches.filter(batch => batch.id !== generatedBatch?.id).map((batch) => (
-            <ImageBatch key={batch.id} batch={batch} onDelete={handleDelete} />
+            <ImageBatch key={batch.id} batch={batch} onDelete={handleDelete} onRemix={handleRemix} />
           ))}
         </div>
       </div>

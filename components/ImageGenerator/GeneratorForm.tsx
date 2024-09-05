@@ -19,10 +19,26 @@ interface Batch {
   images: Image[];
 }
 
-export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batch) => void }) {
+export default function GeneratorForm({ onGenerate, remixBatch }: { onGenerate: (batch: Batch) => void, remixBatch: Batch | null }) {
   const [prompt, setPrompt] = useState('');
   const [model, setModel] = useState('runware:101@1'); // FLUX DEV as default
   const [aspectRatio, setAspectRatio] = useState('square');
+
+  useEffect(() => {
+    if (remixBatch) {
+      setPrompt(remixBatch.prompt);
+      setModel(remixBatch.model);
+      setAspectRatio(getAspectRatioFromDimensions(remixBatch.width, remixBatch.height));
+      setImageCount(remixBatch.images.length);
+    }
+  }, [remixBatch]);
+
+  const getAspectRatioFromDimensions = (width: number, height: number) => {
+    if (width === height) return 'square';
+    if (width === 832 && height === 1216) return 'portrait';
+    if (width === 1216 && height === 832) return 'landscape';
+    return 'square'; // Default to square if dimensions don't match known ratios
+  };
   const [imageCount, setImageCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 

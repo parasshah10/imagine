@@ -4,9 +4,10 @@ import { Button } from '../ui/button';
 
 interface BatchMenuProps {
   onDelete: () => void;
+  onRemix: () => void;
 }
 
-export default function BatchMenu({ onDelete }: BatchMenuProps) {
+export default function BatchMenu({ onDelete, onRemix }: BatchMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -36,6 +37,17 @@ export default function BatchMenu({ onDelete }: BatchMenuProps) {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+            <button
+              onClick={() => {
+                onRemix();
+                setIsOpen(false);
+              }}
+              className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
+              role="menuitem"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              <span>Remix</span>
+            </button>
             <button
               onClick={() => {
                 onDelete();

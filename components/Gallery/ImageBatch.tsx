@@ -26,9 +26,10 @@ const modelNames = {
 interface ImageBatchProps {
   batch: Batch;
   onDelete: (id: number) => void;
+  onRemix: (batch: Batch) => void;
 }
 
-export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
+export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps) {
   const [copied, setCopied] = useState(false);
   const [isPromptTruncated, setIsPromptTruncated] = useState(false);
   const promptRef = useRef<HTMLParagraphElement>(null);
@@ -53,6 +54,10 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
 
   const handleDelete = () => {
     onDelete(batch.id);
+  };
+
+  const handleRemix = () => {
+    onRemix(batch);
   };
 
   const copyToClipboard = () => {
@@ -90,7 +95,7 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
             >
               {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
             </Button>
-            <BatchMenu onDelete={handleDelete} />
+            <BatchMenu onDelete={handleDelete} onRemix={handleRemix} />
           </div>
         </div>
       </div>
