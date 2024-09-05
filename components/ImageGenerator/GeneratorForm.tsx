@@ -34,7 +34,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (images: Ima
       }
 
       const data = await response.json();
-      onGenerate(data.images);
+      onGenerate(data.batch);
     } catch (error) {
       console.error('Error generating image:', error);
     }

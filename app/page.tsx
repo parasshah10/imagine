@@ -20,7 +20,6 @@ export default function Home() {
   const [previousBatches, setPreviousBatches] = useState<Batch[]>([]);
 
   useEffect(() => {
-    // Fetch previous batches from the backend
     fetchPreviousBatches();
   }, []);
 
@@ -38,7 +37,8 @@ export default function Home() {
 
   const handleGenerate = (newBatch: Batch) => {
     setGeneratedBatch(newBatch);
-    setPreviousBatches((prev) => [newBatch, ...prev].slice(0, 5));
+    setPreviousBatches((prev) => [newBatch, ...prev].slice(0, 4));
+    fetchPreviousBatches(); // Fetch updated batches after generation
   };
 
   return (

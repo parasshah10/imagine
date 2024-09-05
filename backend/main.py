@@ -36,7 +36,7 @@ class ImageRequest(BaseModel):
     aspect_ratio: str
     number_results: int = 1
 
-def insert_batch(prompt: str, aspect_ratio: str, urls: list[str]):
+def insert_batch(prompt: str, aspect_ratio: str, urls: list[str]) -> int:
     conn = None
     try:
         conn = psycopg2.connect(**db_params)
@@ -55,8 +55,10 @@ def insert_batch(prompt: str, aspect_ratio: str, urls: list[str]):
         
         conn.commit()
         cur.close()
+        return batch_id
     except (Exception, psycopg2.DatabaseError) as error:
         print(f"Error inserting batch: {error}")
+        raise
     finally:
         if conn is not None:
             conn.close()
@@ -90,11 +92,44 @@ async def generate_image(request: ImageRequest):
         image_urls = [image.imageURL for image in images]
         
         # Insert generated images into the database as a batch
-        insert_batch(request.prompt, request.aspect_ratio, image_urls)
+        batch_id = insert_batch(request.prompt, request.aspect_ratio, image_urls)
         
-        return {"images": [{"url": url} for url in image_urls]}
+        return {"batch": {"id": batch_id, "prompt": request.prompt, "aspect_ratio": request.aspect_ratio, "images": [{"url": url} for url in image_urls]}}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/get-batches")
+async def get_batches():
+    conn = None
+    try:
+        conn = psycopg2.connect(**db_params)
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT b.id, b.prompt, b.aspect_ratio, array_agg(i.url) as image_urls
+            FROM batches b
+            JOIN images i ON i.batch_id = b.id
+            GROUP BY b.id, b.prompt, b.aspect_ratio
+            ORDER BY b.created_at DESC
+            LIMIT 5
+        """)
+        rows = cur.fetchall()
+        
+        batches = [
+            {
+                "id": row[0],
+                "prompt": row[1],
+                "aspect_ratio": row[2],
+                "images": [{"url": url} for url in row[3]]
+            }
+            for row in rows
+        ]
+        
+        return {"batches": batches}
+    except (Exception, psycopg2.DatabaseError) as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    finally:
+        if conn is not None:
+            conn.close()
 
 if __name__ == "__main__":
     import uvicorn
