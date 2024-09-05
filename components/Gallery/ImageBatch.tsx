@@ -5,6 +5,23 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 import { Copy, Check } from 'lucide-react';
 import { Button } from '../ui/button';
 
+const formatTimestamp = (timestamp: string) => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+
+  const timeString = `${hours}:${minutes}`;
+  const dateString = date.getFullYear() === now.getFullYear() 
+    ? `${day}-${month}`
+    : `${day}-${month}-${year}`;
+
+  return `${timeString} ${dateString}`;
+};
+
 interface Image {
   url: string;
 }
@@ -16,6 +33,7 @@ interface Batch {
   height: number;
   model: string;
   images: Image[];
+  createdAt: string;
 }
 
 const modelNames = {
@@ -95,7 +113,9 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
             <BatchMenu onDelete={handleDelete} onRemix={handleRemix} />
           </div>
         </div>
-        <p className="text-[#141414] dark:text-white text-[10px]">{modelName} | {batch.width}x{batch.height}</p>
+        <p className="text-[#141414] dark:text-white text-[10px]">
+          {modelName} | {batch.width}x{batch.height} • {formatTimestamp(batch.createdAt)}
+        </p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
         {batch.images.map((image, index) => (
