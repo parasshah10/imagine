@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import ModelSelector from './ModelSelector';
 import PromptInput from './PromptInput';
