@@ -9,11 +9,12 @@ interface Image {
 interface ImageCardProps {
   image: Image;
   batchImages: Image[];
+  batchId: number;
 }
 
-export default function ImageCard({ image, batchImages }: ImageCardProps) {
+export default function ImageCard({ image, batchImages, batchId }: ImageCardProps) {
   useEffect(() => {
-    Fancybox.bind("[data-fancybox]", {
+    Fancybox.bind(`[data-fancybox="gallery-${batchId}"]`, {
       contentClick: "iterateZoom",
       Images: {
         Panzoom: {
@@ -35,13 +36,13 @@ export default function ImageCard({ image, batchImages }: ImageCardProps) {
     return () => {
       Fancybox.destroy();
     };
-  }, []);
+  }, [batchId]);
 
   return (
     <div className="flex-shrink-0 w-[120px] md:w-[180px]">
       <a
         href={image.url}
-        data-fancybox="gallery"
+        data-fancybox={`gallery-${batchId}`}
         data-src={image.url}
       >
         <div
