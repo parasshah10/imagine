@@ -18,14 +18,7 @@ export async function POST(request: Request) {
     }
 
     const data = await response.json();
-    return NextResponse.json({
-      batch: {
-        id: Date.now(), // Use a temporary ID for frontend purposes
-        prompt,
-        aspect_ratio,
-        images: data.images
-      }
-    });
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error generating image:', error);
     return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
