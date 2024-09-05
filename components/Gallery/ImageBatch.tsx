@@ -34,11 +34,11 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
   return (
     <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
       <div className="flex justify-between items-start mb-2">
-        <div>
-          <p className="text-[#141414] dark:text-white text-sm font-medium pb-1">{batch.prompt}</p>
-          <p className="text-[#141414] dark:text-white text-xs font-medium">Model: {modelName} | Resolution: {batch.width}x{batch.height}</p>
+        <p className="text-[#141414] dark:text-white text-sm font-medium pb-1">{batch.prompt}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-[#141414] dark:text-white text-xs">{modelName} | {batch.width}x{batch.height}</p>
+          <BatchMenu onDelete={handleDelete} />
         </div>
-        <BatchMenu onDelete={handleDelete} />
       </div>
       <div className="flex overflow-x-auto">
         <div className="flex gap-2">
