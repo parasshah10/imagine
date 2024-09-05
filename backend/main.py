@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from runware import Runware, IImageInference
 from dotenv import load_dotenv
 import openai
+from openai import OpenAI
 
 load_dotenv()
 
@@ -27,10 +28,9 @@ app.add_middleware(
 
 RUNWARE_API_KEY = os.getenv("RUNWARE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
+OPENAI_API_BASE = os.getenv("OPENAI_API_BASE")
 
-openai.api_key = OPENAI_API_KEY
-openai.base_url = OPENAI_BASE_URL
+client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
 
 # Database connection parameters
 db_params = {
@@ -175,13 +175,12 @@ async def enhance_prompt(request: dict):
         if not prompt:
             raise HTTPException(status_code=400, detail="Prompt is required")
 
-        response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+        response = client.chat.completions.create(
+            model="gemini-1.5-flash-latest",
             messages=[
                 {"role": "system", "content": "You are an AI assistant that enhances image generation prompts. Your task is to take a user's prompt and make it more detailed and descriptive, suitable for high-quality image generation."},
-                {"role": "user", "content": f"Enhance this image generation prompt: {prompt}"}
-            ],
-            max_tokens=150,
+                {"role": "user", "content": f"Enhance this image generation prompt: {prompt}. Reply with the enhanced prompt only."}
+            ]
         )
 
         enhanced_prompt = response.choices[0].message.content
