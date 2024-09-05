@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from runware import Runware, IImageInference
 from dotenv import load_dotenv
+import openai
 
 load_dotenv()
 
@@ -25,6 +26,11 @@ app.add_middleware(
 )
 
 RUNWARE_API_KEY = os.getenv("RUNWARE_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
+
+openai.api_key = OPENAI_API_KEY
+openai.base_url = OPENAI_BASE_URL
 
 # Database connection parameters
 db_params = {
@@ -161,6 +167,28 @@ async def delete_batch_route(id: int):
         return {"message": "Batch deleted successfully"}
     else:
         raise HTTPException(status_code=500, detail="Failed to delete batch")
+
+@app.post("/enhance-prompt")
+async def enhance_prompt(request: dict):
+    try:
+        prompt = request.get("prompt")
+        if not prompt:
+            raise HTTPException(status_code=400, detail="Prompt is required")
+
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an AI assistant that enhances image generation prompts. Your task is to take a user's prompt and make it more detailed and descriptive, suitable for high-quality image generation."},
+                {"role": "user", "content": f"Enhance this image generation prompt: {prompt}"}
+            ],
+            max_tokens=150,
+        )
+
+        enhanced_prompt = response.choices[0].message.content
+        return {"enhancedPrompt": enhanced_prompt}
+    except Exception as e:
+        logger.error(f"Error enhancing prompt: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to enhance prompt: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
