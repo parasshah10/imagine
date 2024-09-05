@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   const { prompt, aspect_ratio, number_results } = body;
 
   try {
-    const response = await fetch('http://localhost:8000/generate-image', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/generate-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

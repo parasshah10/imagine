@@ -43,7 +43,7 @@ async def generate_image(request: ImageRequest):
 
     request_image = IImageInference(
         positivePrompt=request.prompt,
-        model="runware:101@1",
+        model="runware:100@1",
         numberResults=request.number_results,
         height=height,
         width=width,
