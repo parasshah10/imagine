@@ -46,7 +46,7 @@ export default function Home() {
         <GeneratorForm onGenerate={handleGenerate} />
       </div>
       <div className="flex-1 px-4 md:px-6 overflow-x-auto">
-        <div className="layout-content-container flex flex-col max-w-[960px]">
+        <div className="layout-content-container flex flex-col w-full">
           {generatedBatch && (
             <ImageBatch title="Generated Images" batch={generatedBatch} />
           )}
