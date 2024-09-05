@@ -38,3 +38,27 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch batches' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'Batch ID is required' }, { status: 400 });
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/delete-batch?id=${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete batch');
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting batch:', error);
+    return NextResponse.json({ error: 'Failed to delete batch' }, { status: 500 });
+  }
+}

@@ -19,8 +19,17 @@ const modelNames = {
   'runware:101@1': 'FLUX DEV'
 };
 
-export default function ImageBatch({ batch }: { batch: Batch }) {
+interface ImageBatchProps {
+  batch: Batch;
+  onDelete: (id: number) => void;
+}
+
+export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
   const modelName = modelNames[batch.model] || batch.model;
+
+  const handleDelete = () => {
+    onDelete(batch.id);
+  };
 
   return (
     <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
@@ -29,7 +38,7 @@ export default function ImageBatch({ batch }: { batch: Batch }) {
           <p className="text-[#141414] dark:text-white text-sm font-medium pb-1">{batch.prompt}</p>
           <p className="text-[#141414] dark:text-white text-xs font-medium">Model: {modelName} | Resolution: {batch.width}x{batch.height}</p>
         </div>
-        <BatchMenu />
+        <BatchMenu onDelete={handleDelete} />
       </div>
       <div className="flex overflow-x-auto">
         <div className="flex gap-2">
