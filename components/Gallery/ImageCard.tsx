@@ -39,17 +39,16 @@ export default function ImageCard({ image, batchImages, batchId }: ImageCardProp
   }, [batchId]);
 
   return (
-    <div className="flex-shrink-0 w-[120px] md:w-[180px]">
-      <a
-        href={image.url}
-        data-fancybox={`gallery-${batchId}`}
-        data-src={image.url}
-      >
-        <div
-          className="w-full h-[120px] md:h-[180px] bg-center bg-no-repeat bg-cover rounded-xl cursor-pointer"
-          style={{backgroundImage: `url("${image.url}")`}}
-        ></div>
-      </a>
-    </div>
+    <a
+      href={image.url}
+      data-fancybox={`gallery-${batchId}`}
+      data-src={image.url}
+      className="block aspect-square"
+    >
+      <div
+        className="w-full h-full bg-center bg-no-repeat bg-cover rounded-xl cursor-pointer"
+        style={{backgroundImage: `url("${image.url}")`}}
+      ></div>
+    </a>
   );
 }

@@ -69,12 +69,12 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
 
   return (
     <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
-        <div className="flex items-center gap-2 max-w-full sm:max-w-[70%] w-full">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <p ref={promptRef} className="text-[#141414] dark:text-white text-sm font-medium truncate cursor-default flex-grow">{batch.prompt}</p>
+                <p ref={promptRef} className="text-[#141414] dark:text-white text-sm font-medium truncate cursor-default max-w-[70%]">{batch.prompt}</p>
               </TooltipTrigger>
               {isPromptTruncated && (
                 <TooltipContent side="bottom" align="center" className="max-w-md">
@@ -83,9 +83,6 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
               )}
             </Tooltip>
           </TooltipProvider>
-        </div>
-        <div className="flex justify-between items-center w-full sm:w-auto mt-1 sm:mt-0">
-          <p className="text-[#141414] dark:text-white text-[10px] whitespace-nowrap">{modelName} | {batch.width}x{batch.height}</p>
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
@@ -98,13 +95,12 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
             <BatchMenu onDelete={handleDelete} onRemix={handleRemix} />
           </div>
         </div>
+        <p className="text-[#141414] dark:text-white text-[10px]">{modelName} | {batch.width}x{batch.height}</p>
       </div>
-      <div className="flex overflow-x-auto mt-2">
-        <div className="flex gap-2">
-          {batch.images.map((image, index) => (
-            <ImageCard key={index} image={image} batchImages={batch.images} batchId={batch.id} />
-          ))}
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
+        {batch.images.map((image, index) => (
+          <ImageCard key={index} image={image} batchImages={batch.images} batchId={batch.id} />
+        ))}
       </div>
     </div>
   );
