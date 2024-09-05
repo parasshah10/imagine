@@ -69,8 +69,10 @@ def insert_batch(prompt: str, width: int, height: int, model: str, urls: list[st
 async def generate_image(request: ImageRequest):
     print(f"Received request: {request}")  # Debug: Print the entire request
     try:
+        print(f"Connecting to Runware with API key: {RUNWARE_API_KEY[:5]}...")  # Debug: Print first 5 chars of API key
         runware = Runware(api_key=RUNWARE_API_KEY)
         await runware.connect()
+        print("Connected to Runware successfully")  # Debug: Confirm connection
 
         request_image = IImageInference(
             positivePrompt=request.prompt,
@@ -81,18 +83,24 @@ async def generate_image(request: ImageRequest):
         )
         print(f"IImageInference request: {request_image}")  # Debug: Print the IImageInference request
 
+        print("Calling runware.imageInference...")  # Debug: Before API call
         images = await runware.imageInference(requestImage=request_image)
+        print(f"Received response from runware.imageInference: {images}")  # Debug: After API call
+
         image_urls = [image.imageURL for image in images]
         print(f"Generated image URLs: {image_urls}")  # Debug: Print the generated image URLs
         
-        # Insert generated images into the database as a batch
+        print("Inserting batch into database...")  # Debug: Before database insertion
         batch_id = insert_batch(request.prompt, request.width, request.height, request.model, image_urls)
+        print(f"Inserted batch with ID: {batch_id}")  # Debug: After database insertion
         
         response = {"batch": {"id": batch_id, "prompt": request.prompt, "width": request.width, "height": request.height, "model": request.model, "images": [{"url": url} for url in image_urls]}}
         print(f"Response: {response}")  # Debug: Print the response
         return response
     except Exception as e:
         print(f"Error generating image: {str(e)}")
+        print(f"Error type: {type(e)}")  # Debug: Print the type of exception
+        print(f"Error args: {e.args}")  # Debug: Print the exception arguments
         raise HTTPException(status_code=500, detail=f"Failed to generate image: {str(e)}")
 
 @app.get("/get-batches")
