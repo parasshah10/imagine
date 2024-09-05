@@ -6,7 +6,11 @@ import { Copy, Check } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const formatTimestamp = (timestamp: string) => {
+  if (!timestamp) return 'N/A';
+  
   const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return 'Invalid Date';
+
   const now = new Date();
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -114,7 +118,7 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
           </div>
         </div>
         <p className="text-[#141414] dark:text-white text-[10px]">
-          {modelName} | {batch.width}x{batch.height} • {batch.createdAt ? formatTimestamp(batch.createdAt) : 'N/A'}
+          {modelName} | {batch.width}x{batch.height} • {formatTimestamp(batch.createdAt)}
         </p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
