@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import ModelSelector from './ModelSelector';
 import PromptInput from './PromptInput';
 import AspectRatioSelector from './AspectRatioSelector';
@@ -23,6 +24,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batc
   const [model, setModel] = useState('runware:101@1'); // FLUX DEV as default
   const [aspectRatio, setAspectRatio] = useState('square');
   const [imageCount, setImageCount] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const aspectRatios = {
     square: { width: 1024, height: 1024 },
@@ -34,6 +36,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batc
 
   const handleGenerate = async () => {
     setError(null);
+    setIsLoading(true);
     try {
       const { width, height } = aspectRatios[aspectRatio];
       const response = await fetch('/api/generate-image', {
@@ -60,6 +63,8 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batc
     } catch (error) {
       console.error('Error generating image:', error);
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,8 +84,16 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batc
           variant="outline" 
           className="w-full justify-center bg-white dark:bg-gray-800 text-[#141414] dark:text-white font-bold"
           onClick={handleGenerate}
+          disabled={isLoading}
         >
-          Generate
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 size-4 animate-spin" />
+              Generating...
+            </>
+          ) : (
+            'Generate'
+          )}
         </Button>
       </div>
     </div>

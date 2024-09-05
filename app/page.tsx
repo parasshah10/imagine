@@ -49,9 +49,7 @@ export default function Home() {
       </div>
       <div className="flex-1 px-4 md:px-6 overflow-x-auto">
         <div className="layout-content-container flex flex-col w-full">
-          {generatedBatch && (
-            <ImageBatch title="Generated Images" batch={generatedBatch} />
-          )}
+          {generatedBatch && <ImageBatch batch={generatedBatch} />}
           {previousBatches.filter(batch => batch.id !== generatedBatch?.id).map((batch) => (
             <ImageBatch key={batch.id} batch={batch} />
           ))}
