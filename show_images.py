@@ -21,9 +21,9 @@ def show_images():
         conn = psycopg2.connect(**db_params)
         cur = conn.cursor()
         cur.execute("""
-            SELECT i.id, b.prompt, b.aspect_ratio, i.url, i.created_at
-            FROM images i
-            JOIN batches b ON i.batch_id = b.id
+            SELECT b.id, b.prompt, b.aspect_ratio, i.url, i.created_at
+            FROM batches b
+            JOIN images i ON i.batch_id = b.id
             ORDER BY i.created_at DESC
             LIMIT 10
         """)
@@ -32,7 +32,7 @@ def show_images():
         print("Latest 10 images:")
         print("----------------")
         for row in rows:
-            print(f"ID: {row[0]}")
+            print(f"Batch ID: {row[0]}")
             print(f"Prompt: {row[1]}")
             print(f"Aspect Ratio: {row[2]}")
             print(f"URL: {row[3]}")
