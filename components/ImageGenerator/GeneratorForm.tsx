@@ -42,7 +42,6 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (images: Ima
 
   return (
     <div className="layout-content-container flex flex-col w-full md:w-80">
-      <h2 className="text-[#141414] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Create</h2>
       <ModelSelector value={model} onChange={setModel} />
       <PromptInput value={prompt} onChange={setPrompt} />
       <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
