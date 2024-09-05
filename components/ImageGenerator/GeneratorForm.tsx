@@ -30,7 +30,10 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batc
     portrait: { width: 832, height: 1216 }
   };
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleGenerate = async () => {
+    setError(null);
     try {
       const { width, height } = aspectRatios[aspectRatio];
       const response = await fetch('/api/generate-image', {
@@ -47,14 +50,16 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batc
         }),
       });
       
+      const data = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Failed to generate image');
+        throw new Error(data.detail || 'Failed to generate image');
       }
 
-      const data = await response.json();
       onGenerate(data.batch);
     } catch (error) {
       console.error('Error generating image:', error);
+      setError(error instanceof Error ? error.message : 'An unknown error occurred');
     }
   };
 
@@ -64,6 +69,11 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batc
       <PromptInput value={prompt} onChange={setPrompt} />
       <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
       <ImageCountSlider value={imageCount} onChange={setImageCount} />
+      {error && (
+        <div className="px-4 py-2 mb-3 text-red-500 bg-red-100 dark:bg-red-900 dark:text-red-100 rounded-md">
+          {error}
+        </div>
+      )}
       <div className="flex px-4 py-3">
         <Button 
           variant="outline" 

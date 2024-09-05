@@ -67,18 +67,18 @@ def insert_batch(prompt: str, width: int, height: int, model: str, urls: list[st
 
 @app.post("/generate-image")
 async def generate_image(request: ImageRequest):
-    runware = Runware(api_key=RUNWARE_API_KEY)
-    await runware.connect()
-
-    request_image = IImageInference(
-        positivePrompt=request.prompt,
-        model=request.model,
-        numberResults=request.number_results,
-        height=request.height,
-        width=request.width,
-    )
-
     try:
+        runware = Runware(api_key=RUNWARE_API_KEY)
+        await runware.connect()
+
+        request_image = IImageInference(
+            positivePrompt=request.prompt,
+            model=request.model,
+            numberResults=request.number_results,
+            height=request.height,
+            width=request.width,
+        )
+
         images = await runware.imageInference(requestImage=request_image)
         image_urls = [image.imageURL for image in images]
         
@@ -87,7 +87,8 @@ async def generate_image(request: ImageRequest):
         
         return {"batch": {"id": batch_id, "prompt": request.prompt, "width": request.width, "height": request.height, "model": request.model, "images": [{"url": url} for url in image_urls]}}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error generating image: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate image: {str(e)}")
 
 @app.get("/get-batches")
 async def get_batches():
