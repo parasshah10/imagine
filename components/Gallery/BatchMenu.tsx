@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MoreHorizontal, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Trash2, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface BatchMenuProps {
