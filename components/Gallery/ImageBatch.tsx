@@ -64,12 +64,12 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
 
   return (
     <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
-      <div className="flex justify-between items-start mb-2">
-        <div className="flex items-center gap-2 max-w-[70%]">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+        <div className="flex items-center gap-2 max-w-full sm:max-w-[70%]">
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <p ref={promptRef} className="text-[#141414] dark:text-white text-sm font-medium pb-1 truncate cursor-default">{batch.prompt}</p>
+                <p ref={promptRef} className="text-[#141414] dark:text-white text-sm font-medium truncate cursor-default">{batch.prompt}</p>
               </TooltipTrigger>
               {isPromptTruncated && (
                 <TooltipContent side="bottom" align="center" className="max-w-md">
@@ -81,18 +81,18 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-6 w-6 flex-shrink-0"
             onClick={copyToClipboard}
           >
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
           </Button>
         </div>
-        <div className="flex items-center gap-2">
-          <p className="text-[#141414] dark:text-white text-xs whitespace-nowrap">{modelName} | {batch.width}x{batch.height}</p>
+        <div className="flex justify-between items-center w-full sm:w-auto mt-1 sm:mt-0">
+          <p className="text-[#141414] dark:text-white text-[10px] whitespace-nowrap">{modelName} | {batch.width}x{batch.height}</p>
           <BatchMenu onDelete={handleDelete} />
         </div>
       </div>
-      <div className="flex overflow-x-auto">
+      <div className="flex overflow-x-auto mt-2">
         <div className="flex gap-2">
           {batch.images.map((image, index) => (
             <ImageCard key={index} image={image} />
