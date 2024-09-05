@@ -41,8 +41,7 @@ export default function PromptInput({ value, onChange }) {
             onClick={enhancePrompt}
             disabled={isEnhancing || !value.trim()}
           >
-            <Wand2 className={`h-4 w-4 mr-1 ${isEnhancing ? 'animate-pulse' : ''}`} />
-            Enhance
+            <Wand2 className={`h-4 w-4 ${isEnhancing ? 'animate-pulse' : ''}`} />
           </Button>
         </div>
         <textarea
