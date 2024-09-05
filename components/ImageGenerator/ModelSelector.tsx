@@ -18,7 +18,8 @@ export default function ModelSelector({ value, onChange }) {
             <SelectValue placeholder="Choose model" />
           </SelectTrigger>
           <SelectContent className="bg-[#ededed] dark:bg-gray-700 rounded-2xl">
-            <SelectItem value="runware:101@1">Runware 101</SelectItem>
+            <SelectItem value="runware:100@1">FLUX SCHNELL</SelectItem>
+            <SelectItem value="runware:101@1">FLUX DEV</SelectItem>
           </SelectContent>
         </Select>
       </label>

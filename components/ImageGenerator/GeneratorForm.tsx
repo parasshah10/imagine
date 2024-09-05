@@ -20,7 +20,7 @@ interface Batch {
 
 export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batch) => void }) {
   const [prompt, setPrompt] = useState('');
-  const [model, setModel] = useState('runware:101@1');
+  const [model, setModel] = useState('runware:101@1'); // FLUX DEV as default
   const [aspectRatio, setAspectRatio] = useState('square');
   const [imageCount, setImageCount] = useState(1);
 
