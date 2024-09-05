@@ -25,7 +25,7 @@ export default function Home() {
 
   const fetchPreviousBatches = async () => {
     try {
-      const response = await fetch('/api/get-batches');
+      const response = await fetch('/api/generate-image');
       if (response.ok) {
         const data = await response.json();
         setPreviousBatches(data.batches);
