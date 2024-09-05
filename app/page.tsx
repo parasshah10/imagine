@@ -1,20 +1,44 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GeneratorForm from '../components/ImageGenerator/GeneratorForm';
-import ImageGrid from '../components/Gallery/ImageGrid';
+import ImageBatch from '../components/Gallery/ImageBatch';
 
 interface Image {
   url: string;
 }
 
-export default function Home() {
-  const [generatedImages, setGeneratedImages] = useState<Image[]>([]);
-  const [previousImages, setPreviousImages] = useState<Image[]>([]);
+interface Batch {
+  id: number;
+  prompt: string;
+  aspect_ratio: string;
+  images: Image[];
+}
 
-  const handleGenerate = (newImages: Image[]) => {
-    setGeneratedImages(newImages);
-    setPreviousImages((prev) => [...newImages, ...prev].slice(0, 6));
+export default function Home() {
+  const [generatedBatch, setGeneratedBatch] = useState<Batch | null>(null);
+  const [previousBatches, setPreviousBatches] = useState<Batch[]>([]);
+
+  useEffect(() => {
+    // Fetch previous batches from the backend
+    fetchPreviousBatches();
+  }, []);
+
+  const fetchPreviousBatches = async () => {
+    try {
+      const response = await fetch('/api/get-batches');
+      if (response.ok) {
+        const data = await response.json();
+        setPreviousBatches(data.batches);
+      }
+    } catch (error) {
+      console.error('Error fetching previous batches:', error);
+    }
+  };
+
+  const handleGenerate = (newBatch: Batch) => {
+    setGeneratedBatch(newBatch);
+    setPreviousBatches((prev) => [newBatch, ...prev].slice(0, 5));
   };
 
   return (
@@ -24,8 +48,12 @@ export default function Home() {
       </div>
       <div className="flex-1 px-4 md:px-6 overflow-x-auto">
         <div className="layout-content-container flex flex-col max-w-[960px]">
-          <ImageGrid title="Generated Images" images={generatedImages} />
-          <ImageGrid title="Previously Generated" images={previousImages} />
+          {generatedBatch && (
+            <ImageBatch title="Generated Images" batch={generatedBatch} />
+          )}
+          {previousBatches.map((batch) => (
+            <ImageBatch key={batch.id} title={`Batch ${batch.id}`} batch={batch} />
+          ))}
         </div>
       </div>
     </div>

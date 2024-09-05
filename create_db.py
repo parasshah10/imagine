@@ -19,10 +19,17 @@ db_params = {
 def create_tables():
     commands = (
         """
-        CREATE TABLE IF NOT EXISTS images (
+        CREATE TABLE IF NOT EXISTS batches (
             id SERIAL PRIMARY KEY,
             prompt TEXT NOT NULL,
             aspect_ratio VARCHAR(20) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        )
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS images (
+            id SERIAL PRIMARY KEY,
+            batch_id INTEGER REFERENCES batches(id),
             url TEXT NOT NULL,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )

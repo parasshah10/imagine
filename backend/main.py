@@ -36,19 +36,27 @@ class ImageRequest(BaseModel):
     aspect_ratio: str
     number_results: int = 1
 
-def insert_image(prompt: str, aspect_ratio: str, url: str):
+def insert_batch(prompt: str, aspect_ratio: str, urls: list[str]):
     conn = None
     try:
         conn = psycopg2.connect(**db_params)
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO images (prompt, aspect_ratio, url) VALUES (%s, %s, %s)",
-            (prompt, aspect_ratio, url)
+            "INSERT INTO batches (prompt, aspect_ratio) VALUES (%s, %s) RETURNING id",
+            (prompt, aspect_ratio)
         )
+        batch_id = cur.fetchone()[0]
+        
+        for url in urls:
+            cur.execute(
+                "INSERT INTO images (batch_id, url) VALUES (%s, %s)",
+                (batch_id, url)
+            )
+        
         conn.commit()
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
-        print(f"Error inserting image: {error}")
+        print(f"Error inserting batch: {error}")
     finally:
         if conn is not None:
             conn.close()
@@ -79,13 +87,12 @@ async def generate_image(request: ImageRequest):
 
     try:
         images = await runware.imageInference(requestImage=request_image)
-        image_data = [{"url": image.imageURL} for image in images]
+        image_urls = [image.imageURL for image in images]
         
-        # Insert generated images into the database
-        for image in image_data:
-            insert_image(request.prompt, request.aspect_ratio, image['url'])
+        # Insert generated images into the database as a batch
+        insert_batch(request.prompt, request.aspect_ratio, image_urls)
         
-        return {"images": image_data}
+        return {"images": [{"url": url} for url in image_urls]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

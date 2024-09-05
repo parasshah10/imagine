@@ -18,9 +18,30 @@ export async function POST(request: Request) {
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    return NextResponse.json({
+      batch: {
+        id: Date.now(), // Use a temporary ID for frontend purposes
+        prompt,
+        aspect_ratio,
+        images: data.images
+      }
+    });
   } catch (error) {
     console.error('Error generating image:', error);
     return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/get-batches`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch batches');
+    }
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error fetching batches:', error);
+    return NextResponse.json({ error: 'Failed to fetch batches' }, { status: 500 });
   }
 }
