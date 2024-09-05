@@ -15,11 +15,15 @@ db_params = {
     'sslmode': 'require'
 }
 
-# Create tables
-def create_tables():
-    commands = (
+# Drop and create tables
+def recreate_tables():
+    drop_commands = (
+        "DROP TABLE IF EXISTS images;",
+        "DROP TABLE IF EXISTS batches;"
+    )
+    create_commands = (
         """
-        CREATE TABLE IF NOT EXISTS batches (
+        CREATE TABLE batches (
             id SERIAL PRIMARY KEY,
             prompt TEXT NOT NULL,
             aspect_ratio VARCHAR(20) NOT NULL,
@@ -27,28 +31,35 @@ def create_tables():
         )
         """,
         """
-        CREATE TABLE IF NOT EXISTS images (
+        CREATE TABLE images (
             id SERIAL PRIMARY KEY,
             batch_id INTEGER REFERENCES batches(id),
             url TEXT NOT NULL,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )
-        """,
+        """
     )
     conn = None
     try:
         conn = psycopg2.connect(**db_params)
         cur = conn.cursor()
-        for command in commands:
+        
+        # Drop existing tables
+        for command in drop_commands:
             cur.execute(command)
+        
+        # Create new tables
+        for command in create_commands:
+            cur.execute(command)
+        
         cur.close()
         conn.commit()
-        print("Tables created successfully")
+        print("Tables dropped and recreated successfully")
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        print(f"Error: {error}")
     finally:
         if conn is not None:
             conn.close()
 
 if __name__ == '__main__':
-    create_tables()
+    recreate_tables()
