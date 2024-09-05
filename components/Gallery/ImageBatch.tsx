@@ -96,7 +96,7 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <p ref={promptRef} className="text-[#141414] dark:text-white text-sm font-medium truncate cursor-default max-w-[70%]">{batch.prompt}</p>
+                <p ref={promptRef} className="text-[#141414] dark:text-white text-sm font-medium truncate cursor-default max-w-[95%]">{batch.prompt}</p>
               </TooltipTrigger>
               {isPromptTruncated && (
                 <TooltipContent side="bottom" align="center" className="max-w-md">
