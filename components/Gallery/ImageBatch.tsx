@@ -90,7 +90,7 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
   };
 
   return (
-    <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
+    <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-900">
       <div className="flex flex-col">
         <div className="flex items-center justify-between">
           <TooltipProvider delayDuration={0}>

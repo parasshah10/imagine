@@ -42,7 +42,7 @@ export default function BatchMenu({ onDelete, onRemix }: BatchMenuProps) {
                 onRemix();
                 setIsOpen(false);
               }}
-              className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
+              className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 w-full text-left"
               role="menuitem"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
@@ -53,7 +53,7 @@ export default function BatchMenu({ onDelete, onRemix }: BatchMenuProps) {
                 onDelete();
                 setIsOpen(false);
               }}
-              className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
+              className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 w-full text-left"
               role="menuitem"
             >
               <Trash2 className="mr-2 h-4 w-4" />

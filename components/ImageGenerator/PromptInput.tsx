@@ -7,7 +7,7 @@ export default function PromptInput({ value, onChange }) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Type your prompt here"
-          className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#141414] dark:text-white focus:outline-0 focus:ring-0 border-none bg-[#ededed] dark:bg-gray-700 focus:border-none min-h-36 placeholder:text-neutral-500 dark:placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
+          className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#141414] dark:text-white focus:outline-0 focus:ring-0 border-none bg-[#ededed] dark:bg-gray-900 focus:border-none min-h-36 placeholder:text-neutral-500 dark:placeholder:text-gray-400 p-4 text-base font-normal leading-normal"
         ></textarea>
       </label>
     </div>
