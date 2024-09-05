@@ -39,7 +39,7 @@ export default function Home() {
 
   const handleGenerate = (newBatch: Batch) => {
     setGeneratedBatch(newBatch);
-    setPreviousBatches((prev) => [newBatch, ...prev.filter(b => b.id !== newBatch.id)].slice(0, 5));
+    setPreviousBatches((prev) => [newBatch, ...prev.filter(b => b.id !== newBatch.id)].slice(0, 4));
   };
 
   return (
@@ -52,7 +52,7 @@ export default function Home() {
           {generatedBatch && (
             <ImageBatch title="Generated Images" batch={generatedBatch} />
           )}
-          {previousBatches.map((batch) => (
+          {previousBatches.filter(batch => batch.id !== generatedBatch?.id).map((batch) => (
             <ImageBatch key={batch.id} batch={batch} />
           ))}
         </div>
