@@ -35,12 +35,12 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
   return (
     <div className="mb-4 rounded-xl p-3 bg-[#ededed] dark:bg-gray-700">
       <div className="flex justify-between items-start mb-2">
-        <TooltipProvider>
+        <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
               <p className="text-[#141414] dark:text-white text-sm font-medium pb-1 truncate max-w-[70%] cursor-default">{batch.prompt}</p>
             </TooltipTrigger>
-            <TooltipContent side="bottom" align="start" className="max-w-md">
+            <TooltipContent side="bottom" align="center" className="max-w-md">
               <p className="text-sm">{batch.prompt}</p>
             </TooltipContent>
           </Tooltip>
