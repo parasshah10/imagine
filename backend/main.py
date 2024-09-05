@@ -1,4 +1,5 @@
 import os
+import psycopg2
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -20,10 +21,37 @@ app.add_middleware(
 
 RUNWARE_API_KEY = os.getenv("RUNWARE_API_KEY")
 
+# Database connection parameters
+db_params = {
+    'dbname': os.getenv('DB_NAME', 'defaultdb'),
+    'user': os.getenv('DB_USER', 'avnadmin'),
+    'password': os.getenv('DB_PASSWORD', 'AVNS_1WhwMIz3vFT7rhgh5NT'),
+    'host': os.getenv('DB_HOST', 'pg-cd55329-dpptd-66be.e.aivencloud.com'),
+    'port': os.getenv('DB_PORT', '19489'),
+    'sslmode': 'require'
+}
+
 class ImageRequest(BaseModel):
     prompt: str
     aspect_ratio: str
     number_results: int = 1
+
+def insert_image(prompt: str, aspect_ratio: str, url: str):
+    conn = None
+    try:
+        conn = psycopg2.connect(**db_params)
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO images (prompt, aspect_ratio, url) VALUES (%s, %s, %s)",
+            (prompt, aspect_ratio, url)
+        )
+        conn.commit()
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(f"Error inserting image: {error}")
+    finally:
+        if conn is not None:
+            conn.close()
 
 @app.post("/generate-image")
 async def generate_image(request: ImageRequest):
@@ -51,7 +79,13 @@ async def generate_image(request: ImageRequest):
 
     try:
         images = await runware.imageInference(requestImage=request_image)
-        return {"images": [{"url": image.imageURL} for image in images]}
+        image_data = [{"url": image.imageURL} for image in images]
+        
+        # Insert generated images into the database
+        for image in image_data:
+            insert_image(request.prompt, request.aspect_ratio, image['url'])
+        
+        return {"images": image_data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
