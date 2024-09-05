@@ -1,5 +1,6 @@
 import os
 import psycopg2
+import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -7,6 +8,10 @@ from runware import Runware, IImageInference
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -105,19 +110,29 @@ async def get_batches():
         """)
         rows = cur.fetchall()
         
-        batches = [
-            {
+        batches = []
+        for row in rows:
+            created_at = row[6]
+            print(f"Raw created_at from database: {created_at}")  # Debug log
+            if created_at:
+                created_at_iso = created_at.isoformat()
+                print(f"ISO formatted created_at: {created_at_iso}")  # Debug log
+            else:
+                created_at_iso = None
+                print("created_at is None")  # Debug log
+            
+            batch = {
                 "id": row[0],
                 "prompt": row[1],
                 "width": row[2],
                 "height": row[3],
                 "model": row[4],
                 "images": [{"url": url} for url in row[5]],
-                "createdAt": row[6].isoformat()
+                "createdAt": created_at_iso
             }
-            for row in rows
-        ]
+            batches.append(batch)
         
+        print(f"Batches to be returned: {batches}")  # Debug log
         return {"batches": batches}
     except (Exception, psycopg2.DatabaseError) as error:
         raise HTTPException(status_code=500, detail=str(error))
