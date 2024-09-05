@@ -36,3 +36,4 @@ yarn-error.log*
 next-env.d.ts
 .env
 .aider*
+backend/__pycache__/main.cpython-311.pyc
