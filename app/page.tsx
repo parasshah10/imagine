@@ -11,7 +11,9 @@ interface Image {
 interface Batch {
   id: number;
   prompt: string;
-  aspect_ratio: string;
+  width: number;
+  height: number;
+  model: string;
   images: Image[];
 }
 

@@ -33,17 +33,19 @@ db_params = {
 
 class ImageRequest(BaseModel):
     prompt: str
-    aspect_ratio: str
+    width: int
+    height: int
+    model: str
     number_results: int = 1
 
-def insert_batch(prompt: str, aspect_ratio: str, urls: list[str]) -> int:
+def insert_batch(prompt: str, width: int, height: int, model: str, urls: list[str]) -> int:
     conn = None
     try:
         conn = psycopg2.connect(**db_params)
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO batches (prompt, aspect_ratio) VALUES (%s, %s) RETURNING id",
-            (prompt, aspect_ratio)
+            "INSERT INTO batches (prompt, width, height, model) VALUES (%s, %s, %s, %s) RETURNING id",
+            (prompt, width, height, model)
         )
         batch_id = cur.fetchone()[0]
         
@@ -68,23 +70,12 @@ async def generate_image(request: ImageRequest):
     runware = Runware(api_key=RUNWARE_API_KEY)
     await runware.connect()
 
-    aspect_ratios = {
-        "square": (1024, 1024),
-        "landscape": (1216, 832),
-        "portrait": (832, 1216)
-    }
-
-    if request.aspect_ratio not in aspect_ratios:
-        raise HTTPException(status_code=400, detail="Invalid aspect ratio")
-
-    width, height = aspect_ratios[request.aspect_ratio]
-
     request_image = IImageInference(
         positivePrompt=request.prompt,
-        model="runware:100@1",
+        model=request.model,
         numberResults=request.number_results,
-        height=height,
-        width=width,
+        height=request.height,
+        width=request.width,
     )
 
     try:
@@ -92,9 +83,9 @@ async def generate_image(request: ImageRequest):
         image_urls = [image.imageURL for image in images]
         
         # Insert generated images into the database as a batch
-        batch_id = insert_batch(request.prompt, request.aspect_ratio, image_urls)
+        batch_id = insert_batch(request.prompt, request.width, request.height, request.model, image_urls)
         
-        return {"batch": {"id": batch_id, "prompt": request.prompt, "aspect_ratio": request.aspect_ratio, "images": [{"url": url} for url in image_urls]}}
+        return {"batch": {"id": batch_id, "prompt": request.prompt, "width": request.width, "height": request.height, "model": request.model, "images": [{"url": url} for url in image_urls]}}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -105,10 +96,10 @@ async def get_batches():
         conn = psycopg2.connect(**db_params)
         cur = conn.cursor()
         cur.execute("""
-            SELECT b.id, b.prompt, b.aspect_ratio, array_agg(i.url) as image_urls
+            SELECT b.id, b.prompt, b.width, b.height, b.model, array_agg(i.url) as image_urls
             FROM batches b
             JOIN images i ON i.batch_id = b.id
-            GROUP BY b.id, b.prompt, b.aspect_ratio
+            GROUP BY b.id, b.prompt, b.width, b.height, b.model
             ORDER BY b.created_at DESC
             LIMIT 5
         """)
@@ -118,8 +109,10 @@ async def get_batches():
             {
                 "id": row[0],
                 "prompt": row[1],
-                "aspect_ratio": row[2],
-                "images": [{"url": url} for url in row[3]]
+                "width": row[2],
+                "height": row[3],
+                "model": row[4],
+                "images": [{"url": url} for url in row[5]]
             }
             for row in rows
         ]

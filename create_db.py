@@ -26,7 +26,9 @@ def recreate_tables():
         CREATE TABLE batches (
             id SERIAL PRIMARY KEY,
             prompt TEXT NOT NULL,
-            aspect_ratio VARCHAR(20) NOT NULL,
+            width INTEGER NOT NULL,
+            height INTEGER NOT NULL,
+            model VARCHAR(50) NOT NULL,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )
         """,

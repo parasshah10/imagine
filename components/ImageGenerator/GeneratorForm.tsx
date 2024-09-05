@@ -9,14 +9,30 @@ interface Image {
   url: string;
 }
 
-export default function GeneratorForm({ onGenerate }: { onGenerate: (images: Image[]) => void }) {
+interface Batch {
+  id: number;
+  prompt: string;
+  width: number;
+  height: number;
+  model: string;
+  images: Image[];
+}
+
+export default function GeneratorForm({ onGenerate }: { onGenerate: (batch: Batch) => void }) {
   const [prompt, setPrompt] = useState('');
   const [model, setModel] = useState('runware:101@1');
   const [aspectRatio, setAspectRatio] = useState('square');
   const [imageCount, setImageCount] = useState(1);
 
+  const aspectRatios = {
+    square: { width: 1024, height: 1024 },
+    landscape: { width: 1216, height: 832 },
+    portrait: { width: 832, height: 1216 }
+  };
+
   const handleGenerate = async () => {
     try {
+      const { width, height } = aspectRatios[aspectRatio];
       const response = await fetch('/api/generate-image', {
         method: 'POST',
         headers: {
@@ -24,7 +40,9 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: (images: Ima
         },
         body: JSON.stringify({
           prompt,
-          aspect_ratio: aspectRatio,
+          width,
+          height,
+          model,
           number_results: imageCount,
         }),
       });
