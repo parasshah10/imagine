@@ -11,10 +11,12 @@ interface Batch {
   images: Image[];
 }
 
-export default function ImageBatch({ title, batch }: { title: string; batch: Batch }) {
+export default function ImageBatch({ batch, title }: { batch: Batch; title?: string }) {
   return (
     <div className="mb-8">
-      <h2 className="text-[#141414] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">{title}</h2>
+      {title && (
+        <h2 className="text-[#141414] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">{title}</h2>
+      )}
       <p className="text-[#141414] dark:text-white text-sm font-medium px-4 pb-2">{batch.prompt}</p>
       <div className="flex overflow-x-auto pb-4">
         <div className="flex gap-3 md:gap-4 px-4">
