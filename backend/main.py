@@ -124,6 +124,35 @@ async def get_batches():
         if conn is not None:
             conn.close()
 
+def delete_batch(batch_id: int):
+    conn = None
+    try:
+        conn = psycopg2.connect(**db_params)
+        cur = conn.cursor()
+        
+        # Delete associated images first
+        cur.execute("DELETE FROM images WHERE batch_id = %s", (batch_id,))
+        
+        # Then delete the batch
+        cur.execute("DELETE FROM batches WHERE id = %s", (batch_id,))
+        
+        conn.commit()
+        return True
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(f"Error deleting batch: {error}")
+        return False
+    finally:
+        if conn is not None:
+            conn.close()
+
+@app.delete("/delete-batch")
+async def delete_batch_route(id: int):
+    success = delete_batch(id)
+    if success:
+        return {"message": "Batch deleted successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to delete batch")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
