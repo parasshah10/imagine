@@ -6,9 +6,11 @@ import { Copy, Check } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const formatTimestamp = (timestamp: string) => {
+  console.log('Raw timestamp:', timestamp); // Debug log
   if (!timestamp) return 'N/A';
   
   const date = new Date(timestamp);
+  console.log('Parsed date:', date); // Debug log
   if (isNaN(date.getTime())) return 'Invalid Date';
 
   const now = new Date();
@@ -23,7 +25,9 @@ const formatTimestamp = (timestamp: string) => {
     ? `${day}-${month}`
     : `${day}-${month}-${year}`;
 
-  return `${timeString} ${dateString}`;
+  const formattedTimestamp = `${timeString} ${dateString}`;
+  console.log('Formatted timestamp:', formattedTimestamp); // Debug log
+  return formattedTimestamp;
 };
 
 interface Image {
