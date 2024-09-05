@@ -96,10 +96,10 @@ async def get_batches():
         conn = psycopg2.connect(**db_params)
         cur = conn.cursor()
         cur.execute("""
-            SELECT b.id, b.prompt, b.width, b.height, b.model, array_agg(i.url) as image_urls
+            SELECT b.id, b.prompt, b.width, b.height, b.model, array_agg(i.url) as image_urls, b.created_at
             FROM batches b
             JOIN images i ON i.batch_id = b.id
-            GROUP BY b.id, b.prompt, b.width, b.height, b.model
+            GROUP BY b.id, b.prompt, b.width, b.height, b.model, b.created_at
             ORDER BY b.created_at DESC
             LIMIT 5
         """)
@@ -112,7 +112,8 @@ async def get_batches():
                 "width": row[2],
                 "height": row[3],
                 "model": row[4],
-                "images": [{"url": url} for url in row[5]]
+                "images": [{"url": url} for url in row[5]],
+                "createdAt": row[6].isoformat()
             }
             for row in rows
         ]

@@ -114,7 +114,7 @@ export default function ImageBatch({ batch, onDelete, onRemix }: ImageBatchProps
           </div>
         </div>
         <p className="text-[#141414] dark:text-white text-[10px]">
-          {modelName} | {batch.width}x{batch.height} • {formatTimestamp(batch.createdAt)}
+          {modelName} | {batch.width}x{batch.height} • {batch.createdAt ? formatTimestamp(batch.createdAt) : 'N/A'}
         </p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-2">
