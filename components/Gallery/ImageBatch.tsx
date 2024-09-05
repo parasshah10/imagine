@@ -97,7 +97,7 @@ export default function ImageBatch({ batch, onDelete }: ImageBatchProps) {
       <div className="flex overflow-x-auto mt-2">
         <div className="flex gap-2">
           {batch.images.map((image, index) => (
-            <ImageCard key={index} image={image} />
+            <ImageCard key={index} image={image} batchImages={batch.images} />
           ))}
         </div>
       </div>

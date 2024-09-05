@@ -1,14 +1,54 @@
+import { useEffect } from 'react';
+import Fancybox from '@fancyapps/ui';
+import '@fancyapps/ui/dist/fancybox/fancybox.css';
+
 interface Image {
   url: string;
 }
 
-export default function ImageCard({ image }: { image: Image }) {
+interface ImageCardProps {
+  image: Image;
+  batchImages: Image[];
+}
+
+export default function ImageCard({ image, batchImages }: ImageCardProps) {
+  useEffect(() => {
+    Fancybox.bind("[data-fancybox]", {
+      contentClick: "iterateZoom",
+      Images: {
+        Panzoom: {
+          maxScale: 4,
+        },
+      },
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["iterateZoom", "fullscreen", "download", "thumbs", "close"],
+        }
+      },
+      Thumbs: {
+        type: "classic",
+      },
+    });
+
+    return () => {
+      Fancybox.destroy();
+    };
+  }, []);
+
   return (
     <div className="flex-shrink-0 w-[120px] md:w-[180px]">
-      <div
-        className="w-full h-[120px] md:h-[180px] bg-center bg-no-repeat bg-cover rounded-xl"
-        style={{backgroundImage: `url("${image.url}")`}}
-      ></div>
+      <a
+        href={image.url}
+        data-fancybox="gallery"
+        data-src={image.url}
+      >
+        <div
+          className="w-full h-[120px] md:h-[180px] bg-center bg-no-repeat bg-cover rounded-xl cursor-pointer"
+          style={{backgroundImage: `url("${image.url}")`}}
+        ></div>
+      </a>
     </div>
   );
 }
