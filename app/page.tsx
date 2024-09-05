@@ -16,11 +16,11 @@ const previousImages = [
 
 export default function Home() {
   return (
-    <div className="flex flex-1 justify-start py-5">
-      <div className="w-80 pl-6">
+    <div className="flex flex-col md:flex-row flex-1 justify-start py-5">
+      <div className="w-full md:w-80 px-6 mb-6 md:mb-0">
         <GeneratorForm />
       </div>
-      <div className="flex-1 px-6">
+      <div className="flex-1 px-6 overflow-x-auto">
         <div className="layout-content-container flex flex-col max-w-[960px]">
           <ImageGrid title="Generated Images" images={sampleImages} />
           <ImageGrid title="Previously Generated" images={previousImages} />
