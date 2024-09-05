@@ -15,6 +15,7 @@ interface Batch {
   height: number;
   model: string;
   images: Image[];
+  createdAt?: string;
 }
 
 export default function Home() {
@@ -39,8 +40,12 @@ export default function Home() {
   };
 
   const handleGenerate = (newBatch: Batch) => {
-    setGeneratedBatch(newBatch);
-    setPreviousBatches((prev) => [newBatch, ...prev.filter(b => b.id !== newBatch.id)].slice(0, 4));
+    const batchWithTimestamp = {
+      ...newBatch,
+      createdAt: new Date().toISOString()
+    };
+    setGeneratedBatch(batchWithTimestamp);
+    setPreviousBatches((prev) => [batchWithTimestamp, ...prev.filter(b => b.id !== batchWithTimestamp.id)].slice(0, 4));
   };
 
   const handleDelete = async (id: number) => {
