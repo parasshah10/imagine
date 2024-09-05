@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import CreditDisplay from './User/CreditDisplay';
 import SearchInput from './SearchInput';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -24,12 +23,7 @@ export default function Navbar() {
       </div>
       <div className="flex flex-1 justify-end gap-8 items-center">
         <SearchInput />
-        <CreditDisplay />
         <ThemeToggle />
-        <div
-          className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-          style={{backgroundImage: 'url("https://cdn.usegalileo.ai/sdxl10/a879f542-e73c-43af-9e70-cc7859996bc5.png")'}}
-        ></div>
       </div>
     </header>
   );
