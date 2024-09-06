@@ -35,7 +35,7 @@ export default function Home() {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/generate-image?page=${loadMore ? page + 1 : 1}`);
+      const response = await fetch(`/api/generate-image?page=${loadMore ? page + 1 : 1}&limit=10`);
       if (response.ok) {
         const data = await response.json();
         if (loadMore) {
