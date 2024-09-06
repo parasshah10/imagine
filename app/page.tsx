@@ -101,7 +101,12 @@ export default function Home() {
           ))}
           {hasMore && (
             <div className="flex justify-center mt-4">
-              <Button onClick={handleLoadMore} disabled={isLoading}>
+              <Button 
+                onClick={handleLoadMore} 
+                disabled={isLoading}
+                variant="outline"
+                className="bg-white dark:bg-gray-800 text-[#141414] dark:text-white font-bold"
+              >
                 {isLoading ? 'Loading...' : 'Load More'}
               </Button>
             </div>
