@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import GeneratorForm from '../components/ImageGenerator/GeneratorForm';
 import ImageBatch from '../components/Gallery/ImageBatch';
+import { Button } from '../components/ui/button';
 
 interface Image {
   url: string;
@@ -22,20 +23,33 @@ export default function Home() {
   const [generatedBatch, setGeneratedBatch] = useState<Batch | null>(null);
   const [previousBatches, setPreviousBatches] = useState<Batch[]>([]);
   const [remixBatch, setRemixBatch] = useState<Batch | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchPreviousBatches();
   }, []);
 
-  const fetchPreviousBatches = async () => {
+  const fetchPreviousBatches = async (loadMore = false) => {
+    if (isLoading) return;
+    setIsLoading(true);
     try {
-      const response = await fetch('/api/generate-image');
+      const response = await fetch(`/api/generate-image?page=${loadMore ? page + 1 : 1}`);
       if (response.ok) {
         const data = await response.json();
-        setPreviousBatches(data.batches);
+        if (loadMore) {
+          setPreviousBatches(prev => [...prev, ...data.batches]);
+          setPage(prev => prev + 1);
+        } else {
+          setPreviousBatches(data.batches);
+        }
+        setHasMore(data.hasMore);
       }
     } catch (error) {
       console.error('Error fetching previous batches:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,7 +59,7 @@ export default function Home() {
       createdAt: new Date().toISOString()
     };
     setGeneratedBatch(batchWithTimestamp);
-    setPreviousBatches((prev) => [batchWithTimestamp, ...prev.filter(b => b.id !== batchWithTimestamp.id)].slice(0, 4));
+    setPreviousBatches((prev) => [batchWithTimestamp, ...prev.filter(b => b.id !== batchWithTimestamp.id)]);
   };
 
   const handleDelete = async (id: number) => {
@@ -70,6 +84,10 @@ export default function Home() {
     setRemixBatch(batch);
   };
 
+  const handleLoadMore = () => {
+    fetchPreviousBatches(true);
+  };
+
   return (
     <div className="flex flex-col md:flex-row flex-1 justify-start py-5">
       <div className="w-full md:w-80 px-4 md:px-6 mb-6 md:mb-0">
@@ -81,6 +99,13 @@ export default function Home() {
           {previousBatches.filter(batch => batch.id !== generatedBatch?.id).map((batch) => (
             <ImageBatch key={batch.id} batch={batch} onDelete={handleDelete} onRemix={handleRemix} />
           ))}
+          {hasMore && (
+            <div className="flex justify-center mt-4">
+              <Button onClick={handleLoadMore} disabled={isLoading}>
+                {isLoading ? 'Loading...' : 'Load More'}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

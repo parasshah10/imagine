@@ -32,7 +32,12 @@ export async function POST(request: Request) {
 
 
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = 5;
+  const offset = (page - 1) * limit;
+
   const pool = new Pool({
     connectionString,
     ssl: {
@@ -48,8 +53,12 @@ export async function GET() {
       JOIN images i ON i.batch_id = b.id
       GROUP BY b.id, b.prompt, b.width, b.height, b.model, b.created_at
       ORDER BY b.created_at DESC
-      LIMIT 5
-    `);
+      LIMIT $1 OFFSET $2
+    `, [limit, offset]);
+
+    const countResult = await client.query('SELECT COUNT(*) FROM batches');
+    const totalCount = parseInt(countResult.rows[0].count, 10);
+
     client.release();
 
     const batches = result.rows.map(row => ({
@@ -62,7 +71,9 @@ export async function GET() {
       createdAt: row.created_at ? row.created_at.toISOString() : null
     }));
 
-    return NextResponse.json({ batches });
+    const hasMore = totalCount > page * limit;
+
+    return NextResponse.json({ batches, hasMore });
   } catch (error) {
     console.error('Error fetching batches:', error);
     return NextResponse.json({ error: 'Failed to fetch batches' }, { status: 500 });
