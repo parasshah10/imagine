@@ -34,15 +34,17 @@ export default function PromptInput({ value, onChange }) {
       <label className="flex flex-col min-w-40 flex-1">
         <div className="flex justify-between items-center pb-2">
           <p className="text-[#141414] dark:text-white text-base font-medium leading-normal">Prompt</p>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 px-2"
-            onClick={enhancePrompt}
-            disabled={isEnhancing || !value.trim()}
-          >
-            <Wand2 className={`h-4 w-4 ${isEnhancing ? 'animate-pulse' : ''}`} />
-          </Button>
+          <div className="flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2"
+              onClick={enhancePrompt}
+              disabled={isEnhancing || !value.trim()}
+            >
+              <Wand2 className={`h-4 w-4 ${isEnhancing ? 'animate-pulse' : ''}`} />
+            </Button>
+          </div>
         </div>
         <textarea
           value={value}
