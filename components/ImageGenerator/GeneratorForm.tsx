@@ -91,8 +91,8 @@ export default function GeneratorForm({ onGenerate, remixBatch }: { onGenerate: 
         <h2 className="text-lg font-bold leading-tight tracking-[-0.015em] text-[#141414] dark:text-white">Imagine</h2>
         <ThemeToggle />
       </div>
-      <ModelSelector value={model} onChange={setModel} />
       <PromptInput value={prompt} onChange={setPrompt} />
+      <ModelSelector value={model} onChange={setModel} />
       <AspectRatioSelector value={aspectRatio} onChange={setAspectRatio} />
       <ImageCountSlider value={imageCount} onChange={setImageCount} />
       {error && (
