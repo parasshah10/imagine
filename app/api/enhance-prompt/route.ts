@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
-    baseURL: process.env.OPENAI_BASE_URL,
+    baseURL: process.env.OPENAI_API_BASE,
   });
   const completion = await openai.chat.completions.create({
     messages: [
